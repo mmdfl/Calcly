@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  email TEXT UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS templates (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  description TEXT DEFAULT '',
+  formula TEXT NOT NULL,
+  variables JSONB NOT NULL,
+  share_id UUID UNIQUE NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS calculators (
+  id SERIAL PRIMARY KEY,
+  template_id INTEGER NOT NULL REFERENCES templates(id) ON DELETE CASCADE,
+  state JSONB NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW()
+);
